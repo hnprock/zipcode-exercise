@@ -1,0 +1,266 @@
+package com.hp.zipcode.service;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.text.MessageFormat;
+import java.util.List;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import com.hp.zipcode.exception.InvalidZipCodeRangeException;
+import com.hp.zipcode.model.ZipCodeRange;
+
+/**
+ * 
+ * @author Huy Pham
+ *
+ */
+public class ZipCodeServiceTest {
+	@Rule
+	public ExpectedException expectedEx = ExpectedException.none();
+
+	private ZipCodeService zipcodeService = new ZipCodeService();
+	
+	/**
+	 * Test for zip code ranges than contains invalid lower bound zip code.
+	 * Expect InvalidZipCodeRangeException to be thrown with an ZIPCODE_RANGE_VALIDATION_ERROR error message.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testInvalidLowerBoundZipCodeRange() throws Exception {
+		expectedEx.expect(InvalidZipCodeRangeException.class);
+		expectedEx.expectMessage(
+				MessageFormat.format(ZipCodeService.ZIPCODE_RANGE_VALIDATION_ERROR, "9574a"));
+
+		// A zip code ranges with non-numeric lower bound zip code
+		String zipcodeRanges = "[9574a ,95756] [95766, 95776]";
+		zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
+	}
+	
+	/**
+	 * Test for zip code ranges than contains invalid upper bound zip code.
+	 * Expect InvalidZipCodeRangeException to be thrown with an ZIPCODE_RANGE_VALIDATION_ERROR error message.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testInvalidUppperBoundZipCodeRange() throws Exception {
+		expectedEx.expect(InvalidZipCodeRangeException.class);
+		expectedEx.expectMessage(
+				MessageFormat.format(ZipCodeService.ZIPCODE_RANGE_VALIDATION_ERROR, "9575a"));
+
+		// A zip code ranges with non-numeric upper bound zip code
+		String zipcodeRanges = "[95746, 9575a] [95766, 95776]";
+		zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
+	}
+	
+	/**
+	 * Test for zip code ranges than contains range with missing lower bound.
+	 * Expect InvalidZipCodeRangeException to be thrown with an ZIPCODE_RANGE_VALIDATION_ERROR error message.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testMissingLowerBoundZipCodeRange() throws Exception {
+		expectedEx.expect(InvalidZipCodeRangeException.class);
+		expectedEx.expectMessage(
+				MessageFormat.format(ZipCodeService.ZIPCODE_RANGE_VALIDATION_ERROR, ""));
+
+		// A zip code ranges with missing lower bound zip code
+		String zipcodeRanges = "[, 95756] [95766, 95776]";
+		zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
+	}
+	
+	/**
+	 * Test for zip code ranges than contains range with missing upper bound.
+	 * Expect InvalidZipCodeRangeException to be thrown with an ZIPCODE_RANGE_VALIDATION_ERROR error message.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testMissingUpperBoundZipCodeRange() throws Exception {
+		expectedEx.expect(InvalidZipCodeRangeException.class);
+		expectedEx.expectMessage(
+				MessageFormat.format(ZipCodeService.ZIPCODE_RANGE_VALIDATION_ERROR, "95746,"));
+
+		// A zip code ranges with missing upper bound zip code
+		String zipcodeRanges = "[95746,] [95766, 95776]";
+		zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
+	}
+	
+	/**
+	 * Test for zip code ranges than contains more than two zip codes.
+	 * Expect InvalidZipCodeRangeException to be thrown with an ZIPCODE_RANGE_VALIDATION_ERROR error message.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testTooManyZipCodeWithinOneRange() throws Exception {
+		expectedEx.expect(InvalidZipCodeRangeException.class);
+		expectedEx.expectMessage(
+				MessageFormat.format(ZipCodeService.ZIPCODE_RANGE_VALIDATION_ERROR, "95746, 95756, 95757"));
+
+		// A zip code ranges with three zip codes
+		String zipcodeRanges = "[95746, 95756, 95757] [95766, 95776]";
+		zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
+	}
+	
+	/**
+	 * Test for zip code ranges with lower bound greater than upper bound.
+	 * Expect InvalidZipCodeRangeException to be thrown with an ZIPCODE_RANGE_OUT_OF_BOUND_ERROR error message.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testZipCodeRangeOutOfBound() throws Exception {
+		expectedEx.expect(InvalidZipCodeRangeException.class);
+		expectedEx.expectMessage(
+				MessageFormat.format(ZipCodeService.ZIPCODE_RANGE_OUT_OF_BOUND_ERROR, "95756", "95746"));
+
+		// A zip code ranges with lower bound greater than upper bound
+		String zipcodeRanges = "[95756, 95746] [95766, 95776]";
+		zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
+	}
+	
+	/**
+	 * Test for zip code ranges with order overlapping ranges.
+	 * 	Expect a non-overlapping zip code ranges to be returned.
+	 */
+	@Test
+	public void testMergeWithOrderOverlappingZipCodeRanges() {
+		try {
+			// A zip code ranges with order overlapping zip codes
+			String zipcodeRanges = "[95746, 95766] [95756, 95776]";
+			List<ZipCodeRange> zipCodeRangeList = zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
+			assertNotNull(zipCodeRangeList);
+			assertTrue(zipCodeRangeList.size() == 1);
+			assertTrue(95746 == zipCodeRangeList.get(0).getLowerBound());
+			assertTrue(95776 == zipCodeRangeList.get(0).getUpperBound());
+		} catch (Exception e) {
+			fail("Don't expect any exception to be thrown.");
+		}
+	}
+	
+	/**
+	 * Test for zip code ranges with an order overlapping ranges.
+	 * Expect a non-overlapping zip code ranges to be returned.
+	 */
+	@Test
+	public void testMergeWithNoOrderOverlappingZipCodeRanges() {
+		try {
+			// A zip code ranges with no order overlapping zip codes
+			String zipcodeRanges = "[95746, 95766]  [95786, 95796] [95756, 95776]";
+			List<ZipCodeRange> zipCodeRangeList = zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
+			assertNotNull(zipCodeRangeList);
+			assertTrue(zipCodeRangeList.size() == 2);
+			assertTrue(95746 == zipCodeRangeList.get(0).getLowerBound());
+			assertTrue(95776 == zipCodeRangeList.get(0).getUpperBound());
+			assertTrue(95786 == zipCodeRangeList.get(1).getLowerBound());
+			assertTrue(95796 == zipCodeRangeList.get(1).getUpperBound());			
+		} catch (Exception e) {
+			fail("Don't expect any exception to be thrown.");			
+		}
+	}
+	
+	/**
+	 * Test for zip code ranges with no overlapping ranges.
+	 * Expect the original zip code ranges to be returned.
+	 */
+	@Test
+	public void testMergeWithNoOverlappingZipCodeRanges() {
+		try {
+			// A zip code ranges of zip codes with no overlapping
+			String zipcodeRanges = "[95746, 95756] [95766, 95776]";
+			List<ZipCodeRange> zipCodeRangeList = zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
+			assertNotNull(zipCodeRangeList);
+			assertTrue(zipCodeRangeList.size() == 2);
+			assertTrue(95746 == zipCodeRangeList.get(0).getLowerBound());
+			assertTrue(95756 == zipCodeRangeList.get(0).getUpperBound());
+			assertTrue(95766 == zipCodeRangeList.get(1).getLowerBound());
+			assertTrue(95776 == zipCodeRangeList.get(1).getUpperBound());			
+		} catch (Exception e) {
+			fail("Don't expect any exception to be thrown.");
+		}
+	}
+	
+	/**
+	 * Test for zip code ranges with missing lower and upper bound zip codes.
+	 * Expect InvalidZipCodeRangeException to be thrown with an ZIPCODE_RANGE_VALIDATION_ERROR error message.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testMergeWithMissingLowerAndUpperBoundZipCodes() throws Exception {
+		expectedEx.expect(InvalidZipCodeRangeException.class);
+		expectedEx.expectMessage(
+				MessageFormat.format(ZipCodeService.ZIPCODE_RANGE_VALIDATION_ERROR, ""));
+		
+		// A range of zip codes with missing lower and upper bound zip codes
+		String zipcodeRanges = "[95746, 95756] [] [95766, 95776]";
+		zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
+	}
+	
+	/**
+	 * Test for same lower and upper bounds in the zip code ranges.
+	 * Expect the original code ranges to be returned.
+	 */
+	@Test
+	public void testMergeWithSameLowerAndUpperBoundZipCodeRanges() {
+		try {
+			// A range of zip codes with same lower and upper bounds
+			String zipcodeRanges = "[95746, 95746] [95766, 95766]";
+			List<ZipCodeRange> zipCodeRangeList = zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
+			assertNotNull(zipCodeRangeList);
+			assertTrue(zipCodeRangeList.size() == 2);
+			assertTrue(95746 == zipCodeRangeList.get(0).getLowerBound());
+			assertTrue(95746 == zipCodeRangeList.get(0).getUpperBound());
+			assertTrue(95766 == zipCodeRangeList.get(1).getLowerBound());
+			assertTrue(95766 == zipCodeRangeList.get(1).getUpperBound());			
+		} catch (Exception e) {
+			fail("Don't expect any exception to be thrown.");
+		}
+	}
+	
+	/**
+	 * Test for zip code ranges that contains tabs in the ranges.
+	 * 	Expect a non-overlapping zip code ranges to be returned.
+	 */
+	@Test
+	public void testMergeWithTabsInZipCodeRanges() {
+		try {
+			String TAB = "\t";
+			
+			// A zip code ranges with order overlapping zip codes that contains tabs
+			String zipcodeRanges = "[95746" + TAB + ", 95766] [95756 ," + TAB + "	95776]";
+			List<ZipCodeRange> zipCodeRangeList = zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
+			assertNotNull(zipCodeRangeList);
+			assertTrue(zipCodeRangeList.size() == 1);
+			assertTrue(95746 == zipCodeRangeList.get(0).getLowerBound());
+			assertTrue(95776 == zipCodeRangeList.get(0).getUpperBound());
+		} catch (Exception e) {
+			fail("Don't expect any exception to be thrown.");
+		}
+	}
+	
+	/**
+	 * Test for empty zip code ranges.
+	 * Expect InvalidZipCodeRangeException to be thrown with an ZIPCODE_RANGE_VALIDATION_ERROR error message.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testMergeWithNullZipCodeRanges() throws Exception {
+		expectedEx.expect(InvalidZipCodeRangeException.class);
+		expectedEx.expectMessage(
+				MessageFormat.format(ZipCodeService.ZIPCODE_RANGE_VALIDATION_ERROR, ""));
+		
+		// A empty zip code ranges
+		zipcodeService.mergeOverlappingZipCodeRanges("");
+		
+	}
+}
