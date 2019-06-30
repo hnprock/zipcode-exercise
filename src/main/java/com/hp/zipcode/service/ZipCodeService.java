@@ -142,22 +142,22 @@ public class ZipCodeService {
 	 * 
 	 */
 	protected List<ZipCodeRange> doMergeZipCodeRanges(List<ZipCodeRange> zipCodeRanges) {
-        //sort the zip code ranges in ascending order of the lower bound
+        	//sort the zip code ranges in ascending order of the lower bound
 		zipCodeRanges.sort((ZipCodeRange o1, ZipCodeRange o2) -> o1.getLowerBound() - (o2.getLowerBound()));
 		
 		//now do the merge
-        LinkedList<ZipCodeRange> mergedZipcodeRanges = new LinkedList<ZipCodeRange>();
-        for (ZipCodeRange zipcodeRange : zipCodeRanges) {
-            // if the list of merged zip code ranges is empty or if the current
-            // zip code range does not overlap with the previous one then just append it.
-            if (mergedZipcodeRanges.isEmpty() || mergedZipcodeRanges.getLast().getUpperBound() < zipcodeRange.getLowerBound()) {
-            	mergedZipcodeRanges.add(zipcodeRange);
-            }
-            // otherwise, there is overlap, so we merge the current and previous zip code range.
-            else {
-            	mergedZipcodeRanges.getLast().setUpperBound( Math.max(mergedZipcodeRanges.getLast().getUpperBound(), zipcodeRange.getUpperBound()));
-            }
-        }
+        	LinkedList<ZipCodeRange> mergedZipcodeRanges = new LinkedList<ZipCodeRange>();
+        	for (ZipCodeRange zipcodeRange : zipCodeRanges) {
+            		// if the list of merged zip code ranges is empty or if the current
+            		// zip code range does not overlap with the previous one then just append it.
+            		if (mergedZipcodeRanges.isEmpty() || mergedZipcodeRanges.getLast().getUpperBound() < zipcodeRange.getLowerBound()) {
+            			mergedZipcodeRanges.add(zipcodeRange);
+            		}
+            		// otherwise, there is overlap, so we merge the current and previous zip code range.
+            		else {
+            			mergedZipcodeRanges.getLast().setUpperBound( Math.max(mergedZipcodeRanges.getLast().getUpperBound(), zipcodeRange.getUpperBound()));
+            		}
+        	}
         
 		return mergedZipcodeRanges;
 	}
