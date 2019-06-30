@@ -27,25 +27,25 @@ public class ZipCodeMainApp
     public static void main( String[] args )
     {   
         Scanner scanner = null;
-        try { 
+        try {
             System.out.println("Please input the zipcode ranges: ");
             scanner = new Scanner(System.in);
             String line = scanner.nextLine();
                         
             ZipCodeService zipCodeService = new ZipCodeService();
             
-        	//validate and merge overlapping zip code ranges
-        	//throw exception when detects an invalid range
-        	List<ZipCodeRange> mergeZipcodeRanges = zipCodeService.mergeOverlappingZipCodeRanges(line);
+            //validate and merge overlapping zip code ranges
+            //throw exception when detects an invalid range
+            List<ZipCodeRange> mergeZipcodeRanges = zipCodeService.mergeOverlappingZipCodeRanges(line);
         	        	
-        	//print the merged zip code ranges to the console
-        	printZipCodeRangesToConsole(mergeZipcodeRanges);
+            //print the merged zip code ranges to the console
+            printZipCodeRangesToConsole(mergeZipcodeRanges);
         } catch (InvalidZipCodeRangeException e) {
         	e.printStackTrace(System.err);
         } finally {
-        	if (scanner != null) {
-            	scanner.close();        		
-        	}
+            if (scanner != null) {
+                scanner.close();        		
+            }
         }
     }
     /**
