@@ -147,7 +147,7 @@ public class ZipCodeServiceTest {
 	}
 	
 	/**
-	 * Test for zip code ranges with an order overlapping ranges.
+	 * Test for zip code ranges with a no order overlapping ranges.
 	 * Expect a non-overlapping zip code ranges to be returned.
 	 */
 	@Test
