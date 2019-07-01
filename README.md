@@ -24,3 +24,6 @@ Then the output should be = [94133,94133] [94200,94399]
 
 ## PRE-REQUISITES:
 * Java 1.8 or Higher
+
+## RUN FROM COMMAND LINE
+java -cp <classpath-directory> com.hp.zipcode.ZipCodeMainApp
