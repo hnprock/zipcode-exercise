@@ -150,7 +150,7 @@ public class ZipCodeService {
         	for (ZipCodeRange zipcodeRange : zipCodeRanges) {
             		// if the list of merged zip code ranges is empty or if the current
             		// zip code range does not overlap with the previous one then just append it.
-            		if (mergedZipcodeRanges.isEmpty() || mergedZipcodeRanges.getLast().getUpperBound() < zipcodeRange.getLowerBound()) {
+            		if (mergedZipcodeRanges.isEmpty() || mergedZipcodeRanges.getLast().getUpperBound() < (zipcodeRange.getLowerBound() - 1)) {
             			mergedZipcodeRanges.add(zipcodeRange);
             		}
             		// otherwise, there is overlap, so we merge the current and previous zip code range.
