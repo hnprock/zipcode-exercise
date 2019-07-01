@@ -1,7 +1,7 @@
 package com.hp.zipcode.service;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.text.MessageFormat;
@@ -138,9 +138,9 @@ public class ZipCodeServiceTest {
 			String zipcodeRanges = "[95746, 95766] [95756, 95776]";
 			List<ZipCodeRange> zipCodeRangeList = zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
 			assertNotNull(zipCodeRangeList);
-			assertTrue(zipCodeRangeList.size() == 1);
-			assertTrue(95746 == zipCodeRangeList.get(0).getLowerBound());
-			assertTrue(95776 == zipCodeRangeList.get(0).getUpperBound());
+			assertEquals(1, zipCodeRangeList.size());
+			assertEquals(95746, zipCodeRangeList.get(0).getLowerBound());
+			assertEquals(95776, zipCodeRangeList.get(0).getUpperBound());
 		} catch (Exception e) {
 			fail("Don't expect any exception to be thrown.");
 		}
@@ -157,11 +157,11 @@ public class ZipCodeServiceTest {
 			String zipcodeRanges = "[95746, 95766]  [95786, 95796] [95756, 95776]";
 			List<ZipCodeRange> zipCodeRangeList = zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
 			assertNotNull(zipCodeRangeList);
-			assertTrue(zipCodeRangeList.size() == 2);
-			assertTrue(95746 == zipCodeRangeList.get(0).getLowerBound());
-			assertTrue(95776 == zipCodeRangeList.get(0).getUpperBound());
-			assertTrue(95786 == zipCodeRangeList.get(1).getLowerBound());
-			assertTrue(95796 == zipCodeRangeList.get(1).getUpperBound());			
+			assertEquals(2, zipCodeRangeList.size());
+			assertEquals(95746, zipCodeRangeList.get(0).getLowerBound());
+			assertEquals(95776, zipCodeRangeList.get(0).getUpperBound());
+			assertEquals(95786, zipCodeRangeList.get(1).getLowerBound());
+			assertEquals(95796, zipCodeRangeList.get(1).getUpperBound());			
 		} catch (Exception e) {
 			fail("Don't expect any exception to be thrown.");			
 		}
@@ -178,11 +178,11 @@ public class ZipCodeServiceTest {
 			String zipcodeRanges = "[95746, 95756] [95766, 95776]";
 			List<ZipCodeRange> zipCodeRangeList = zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
 			assertNotNull(zipCodeRangeList);
-			assertTrue(zipCodeRangeList.size() == 2);
-			assertTrue(95746 == zipCodeRangeList.get(0).getLowerBound());
-			assertTrue(95756 == zipCodeRangeList.get(0).getUpperBound());
-			assertTrue(95766 == zipCodeRangeList.get(1).getLowerBound());
-			assertTrue(95776 == zipCodeRangeList.get(1).getUpperBound());			
+			assertEquals(2, zipCodeRangeList.size());
+			assertEquals(95746, zipCodeRangeList.get(0).getLowerBound());
+			assertEquals(95756, zipCodeRangeList.get(0).getUpperBound());
+			assertEquals(95766, zipCodeRangeList.get(1).getLowerBound());
+			assertEquals(95776, zipCodeRangeList.get(1).getUpperBound());			
 		} catch (Exception e) {
 			fail("Don't expect any exception to be thrown.");
 		}
@@ -216,11 +216,11 @@ public class ZipCodeServiceTest {
 			String zipcodeRanges = "[95746, 95746] [95766, 95766]";
 			List<ZipCodeRange> zipCodeRangeList = zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
 			assertNotNull(zipCodeRangeList);
-			assertTrue(zipCodeRangeList.size() == 2);
-			assertTrue(95746 == zipCodeRangeList.get(0).getLowerBound());
-			assertTrue(95746 == zipCodeRangeList.get(0).getUpperBound());
-			assertTrue(95766 == zipCodeRangeList.get(1).getLowerBound());
-			assertTrue(95766 == zipCodeRangeList.get(1).getUpperBound());			
+			assertEquals(2, zipCodeRangeList.size());
+			assertEquals(95746, zipCodeRangeList.get(0).getLowerBound());
+			assertEquals(95746, zipCodeRangeList.get(0).getUpperBound());
+			assertEquals(95766, zipCodeRangeList.get(1).getLowerBound());
+			assertEquals(95766, zipCodeRangeList.get(1).getUpperBound());			
 		} catch (Exception e) {
 			fail("Don't expect any exception to be thrown.");
 		}
@@ -239,9 +239,9 @@ public class ZipCodeServiceTest {
 			String zipcodeRanges = "[95746" + TAB + ", 95766] [95756 ," + TAB + "	95776]";
 			List<ZipCodeRange> zipCodeRangeList = zipcodeService.mergeOverlappingZipCodeRanges(zipcodeRanges);
 			assertNotNull(zipCodeRangeList);
-			assertTrue(zipCodeRangeList.size() == 1);
-			assertTrue(95746 == zipCodeRangeList.get(0).getLowerBound());
-			assertTrue(95776 == zipCodeRangeList.get(0).getUpperBound());
+			assertEquals(1, zipCodeRangeList.size());
+			assertEquals(95746, zipCodeRangeList.get(0).getLowerBound());
+			assertEquals(95776, zipCodeRangeList.get(0).getUpperBound());
 		} catch (Exception e) {
 			fail("Don't expect any exception to be thrown.");
 		}
@@ -260,7 +260,7 @@ public class ZipCodeServiceTest {
 				MessageFormat.format(ZipCodeService.ZIPCODE_RANGE_VALIDATION_ERROR, ""));
 		
 		// A empty zip code ranges
-		zipcodeService.mergeOverlappingZipCodeRanges("");
-		
+		zipcodeService.mergeOverlappingZipCodeRanges("");		
 	}
+
 }
