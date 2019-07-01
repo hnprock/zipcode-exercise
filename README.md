@@ -16,10 +16,10 @@ Given a collection of 5-digit ZIP code ranges (each range includes both their up
 - Ranges may or may not overlap
 
 ## EXAMPLES:
-If the input = [94133,94133] [94200,94299] [94600,94699]\n
+If the input = [94133,94133] [94200,94299] [94600,94699]
 Then the output should be = [94133,94133] [94200,94299] [94600,94699]
 
-If the input = [94133,94133] [94200,94299] [94226,94399]\n 
+If the input = [94133,94133] [94200,94299] [94226,94399]
 Then the output should be = [94133,94133] [94200,94399]
 
 ## PRE-REQUISITES:
