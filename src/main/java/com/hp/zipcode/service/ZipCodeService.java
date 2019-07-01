@@ -19,7 +19,7 @@ import com.hp.zipcode.model.ZipCodeRange;
  */
 public class ZipCodeService {
 	//the regular expression to validate the five digits zip code
-	public static final String VALID_ZIPCODE_RANGE_REGEX = "^[0-9]{5}$";
+	public static final String VALID_ZIPCODE_RANGE_REGEX = "\\d{5}$";
 	
 	//the regular expression to parse the zip code ranges in the bracket
 	public static final String PARSE_ZIPCODE_RANGE_REGEX = "\\[(.*?)\\]";
